@@ -87,7 +87,13 @@ function writeDefaultsIP() {
 }
 
 function writeIP() {
-	
+	cd /etc/network
+	echo "auto eth0" >> $1
+	echo "iface eth0 inet static" >> $1
+	echo "address $ip" >> $1
+	echo "netmask $netmask" >> $1
+	echo "gateway $gateway" >> $1
+	echo "dns-nameservers $dns" >> $1
 }
 
 function installIP {
