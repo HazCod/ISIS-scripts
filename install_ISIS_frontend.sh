@@ -1,6 +1,6 @@
 #!/bin/bash
 
-url="https://github.com/HazCod/ISIS.git"
+url="https://github.com/HazCod/ISIS-frontend.git"
 dir=".isis"
 
 
@@ -20,12 +20,6 @@ function getFromGit {
 	git clone $url $dir
 }
 
-function removeObsolete {
-	rm -r ~/$dir/backend
-	rm -r ~/$dir/installscripts
-	rm r
-}
-
 
 # SCRIPT BEGIN
 
@@ -37,7 +31,6 @@ fi
 installDependencies
 cd ~
 getFromGit
-removeObsolete
 
 # SCRIPT END
 
