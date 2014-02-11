@@ -17,6 +17,8 @@ function installDependencies {
 	installPackage apache2
 	installPackage libapache2-mod-php5
 	installPackage mysql-server
+	installPackage php
+	installPackage iw
 }
 
 function getFromGit {
