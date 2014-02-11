@@ -14,6 +14,7 @@ function installDependencies {
 	
 	installPackage git
 	installPackage python
+	isntallPackage python-mysqldb
 }
 
 function getFromGit {
