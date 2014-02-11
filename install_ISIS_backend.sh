@@ -16,6 +16,7 @@ function installDependencies {
 	installPackage python
 	installPackage apache2
 	installPackage php
+	installPackage iw
 }
 
 function getFromGit {
