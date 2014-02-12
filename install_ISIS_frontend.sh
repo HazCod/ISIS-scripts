@@ -6,7 +6,7 @@ dir=".isis"
 
 function installPackage() {
 	sudo apt-get -q -y install $1
-	sudo -k
+	exit
 }
 
 function installDependencies {
@@ -106,7 +106,7 @@ function installIP {
 	fi
 	if [[ -z $ip ]]; then
 		writeIP "interfaces"
-	sudo -k
+	exit
 }
 
 function usage {
@@ -154,10 +154,19 @@ if [ $# > 0 ]; then
 	fi
 fi
 
+function installHostname(){
+	sudo -s
+	echo $1 > "/etc/hostname"
+	/etc/init.d/hostname.sh start
+	exit
+}
+
+read -p "What hostname/ID should be given to this unit? This must be unique!" host
 installDependencies
 cd ~
 getFromGit
 installIP
+installHostname $host
 
 # SCRIPT END
 
@@ -178,4 +187,3 @@ function valid_ip()
     fi
     return $stat
 }
-
