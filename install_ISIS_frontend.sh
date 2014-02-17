@@ -41,6 +41,7 @@ function installDependencies {
 	installPackage git
 	installPackage python
 	installPackage python-mysqldb
+	installPackage python-git
 	installPackage libssl-dev
 	installPackage aircrack-ng
 }
@@ -217,8 +218,8 @@ read -p "What is the correct IP address/URL of the server?" serv
 cd ~
 addUser
 installIP
-#installDependencies
-#getFromGit
+installDependencies
+getFromGit
 installHostname $host
 addToSudoers
 chmodFiles
