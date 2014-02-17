@@ -1,15 +1,22 @@
 #!/bin/bash
 
 url="https://github.com/HazCod/ISIS-frontend.git"
-dir=".isis"
+user="isis"
+dir="/home/" + $user + "/ISIS-frontend/"
+cron="*/1 * * * * /home/isis/ISIS-frontend/check_assignments.py &>/dev/null"
+
+function isPackageInstalled() {
+	 return sudo dpkg-query -l | grep $1 | wc -l
+}
 
 
 function installPackage() {
-	sudo apt-get -q -y install $1
+	if [isPackageInstalled($1) = 0]{
+		sudo apt-get -q -y install $1
+	}	
 }
-
-function valid_ip()
-{
+	
+function valid_ip() {
     local  ip=$1
     local  stat=1
 
@@ -32,6 +39,7 @@ function installDependencies {
 	installPackage python
 	installPackage python-mysqldb
 	installPackage libssl-dev
+	installPackage aircrack-ng
 }
 
 function getFromGit {
@@ -67,7 +75,7 @@ function checkDefArgs() {
 	def_dns=$4
 	shift
 }
-
+-exec chmod +x {} \;
 function checkArgs() {
 	if ! valid_ip $1; then
 		echo "Please provide a valid IP."
@@ -124,6 +132,29 @@ function installIP {
 
 }
 
+function addToSudoers {
+	sudo adduser isis sudo
+	sudo echo $user + " ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+}
+
+function chmodFiles {
+	find $dir -type f -exec chmod +x {} \;
+}
+
+function setCron {
+	#write out current crontab
+	crontab -l > mycron
+	#echo new cron into cron file
+	echo $1 >> mycron
+	#install new cron file
+	sudo crontab mycron
+	rm mycron
+}
+
+function addUser {
+	sudo adduser --password osiris isis
+}
+
 function usage {
 	echo "install_ISIS_frontend.sh";
 	echo "----------------------------";
@@ -177,11 +208,14 @@ function installHostname(){
 }
 
 read -p "What hostname/ID should be given to this unit? This must be unique!" host
+addUser
 installIP
 installDependencies
 cd ~
 getFromGit
 installHostname $host
+addToSudoers
+chmodFiles
+setCron $cron
 
 # SCRIPT END
-
