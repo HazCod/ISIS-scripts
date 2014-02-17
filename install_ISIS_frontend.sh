@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#set -x
+set -x
 
 url="https://github.com/HazCod/ISIS-frontend.git"
 user="isis"
@@ -14,7 +14,7 @@ function isPackageInstalled() {
 
 function installPackage() {
 	ins=isPackageInstalled $1
-	if [ "$ins" -eq "0" ]; then
+	if [[ "$ins" -eq 0 ]]; then
 		sudo apt-get -q -y install $1
 	fi	
 }
@@ -43,7 +43,7 @@ function installDependencies {
 	installPackage python-mysqldb
 	installPackage python-git
 	installPackage libssl-dev
-	installPackage aircrack-ng
+	#installPackage aircrack-ng	TODO: download and compile aircrack
 }
 
 function getFromGit {
@@ -169,7 +169,7 @@ function usage {
 }
 
 function setServer() {
-	sed -i -e 's/host="([0-9]{1,3}\.){3}([0-9]{1,3})"/$1/' $1/database.py
+	sed -i -e 's/host="([0-9]{1,3}\.){3}([0-9]{1,3})"/$1/' $dir/database.py
 }
 
 # SCRIPT BEGIN
@@ -210,6 +210,7 @@ fi
 
 function installHostname(){
 	sudo echo $1 > "/etc/hostname"
+	sudo sed -i -e "s/raspberrypi/$1/" /etc/hosts
 	sudo /etc/init.d/hostname.sh start
 }
 
@@ -223,7 +224,7 @@ getFromGit
 installHostname $host
 addToSudoers
 chmodFiles
-setServer $serv
+setServer $dir
 setCron
 su isis
 
