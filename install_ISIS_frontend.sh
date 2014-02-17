@@ -13,10 +13,7 @@ function isPackageInstalled() {
 
 
 function installPackage() {
-	ins=isPackageInstalled $1
-	if [[ "$ins" -eq 0 ]]; then
-		sudo apt-get -q -y install $1
-	fi	
+	sudo apt-get -q -y install $1
 }
 	
 function valid_ip() {
@@ -47,7 +44,8 @@ function installDependencies {
 }
 
 function getFromGit {
-	git clone $url $dir
+	/usr/bin/git clone $url $dir
+	sudo chown isis $dir
 }
 
 function checkDefArgs() {
@@ -144,8 +142,10 @@ function addToSudoers {
 }
 
 function chmodFiles {
-	find $dir -type f -exec chmod +x {} \;
-	find $dir -type f -exec chown isis {} \;
+	sudo chmod -R +x $dir
+	#find $dir -type f -exec chmod +x {} \;
+	sudo chown -R isis:isis $dir
+	#find $dir -type f -exec chown isis {} \;
 }
 
 function setCron() {
@@ -227,5 +227,6 @@ chmodFiles
 setServer $dir
 setCron
 su isis
+cd ~
 
 # SCRIPT END
