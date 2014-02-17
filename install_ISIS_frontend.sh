@@ -1,8 +1,10 @@
 #!/bin/bash
 
+#set -x
+
 url="https://github.com/HazCod/ISIS-frontend.git"
 user="isis"
-dir="/home/" + $user + "/ISIS-frontend/"
+dir="/home/$user/ISIS-frontend"
 cron="*/1 * * * * /home/isis/ISIS-frontend/check_assignments.py &>/dev/null"
 
 function isPackageInstalled() {
@@ -11,9 +13,10 @@ function isPackageInstalled() {
 
 
 function installPackage() {
-	if [isPackageInstalled($1) = 0]{
+	ins=isPackageInstalled $1
+	if [ "$ins" -eq "0" ]; then
 		sudo apt-get -q -y install $1
-	}	
+	fi	
 }
 	
 function valid_ip() {
@@ -75,7 +78,7 @@ function checkDefArgs() {
 	def_dns=$4
 	shift
 }
--exec chmod +x {} \;
+
 function checkArgs() {
 	if ! valid_ip $1; then
 		echo "Please provide a valid IP."
@@ -128,31 +131,31 @@ function installIP {
 	cd /etc/network/
 	mv interfaces interfaces.old
 	writeIP
+	sleep 2s #Silly bash, working faster then allowed.
 	sudo service networking restart
+	cd ~
 
 }
 
 function addToSudoers {
 	sudo adduser isis sudo
-	sudo echo $user + " ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+	sudo echo "$user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 }
 
 function chmodFiles {
 	find $dir -type f -exec chmod +x {} \;
+	find $dir -type f -exec chown isis {} \;
 }
 
-function setCron {
-	#write out current crontab
+function setCron() {
 	crontab -l > mycron
-	#echo new cron into cron file
-	echo $1 >> mycron
-	#install new cron file
-	sudo crontab mycron
+	echo "$cron" >> mycron
+	sudo /usr/bin/crontab mycron
 	rm mycron
 }
 
 function addUser {
-	sudo adduser --password osiris isis
+	sudo adduser isis
 }
 
 function usage {
@@ -164,6 +167,10 @@ function usage {
 	echo "-d	default		If DHCP or given IP settings don't work, it falls back to the following IP settings.";
 }
 
+function setServer() {
+	sed -i -e 's/host="([0-9]{1,3}\.){3}([0-9]{1,3})"/$1/' $1/database.py
+}
+
 # SCRIPT BEGIN
 
 if [ "$(id -u)" != "0" ]; then
@@ -172,11 +179,11 @@ if [ "$(id -u)" != "0" ]; then
 fi
 
 # if there are any arguments
-if [ $# > 0 ]; then 
+if [ $# > 1 ]; then 
 	# if we are giving a default value
 	if [ $1 = "-d" ]; then
 		# we must have at least 5 values (-d, ip, gateway, netmask, dns) OR 9 values.
-		if [ !  		$# = 5 ] && ![ $# = 9 ]; then
+		if [ ! $# = 5 ] && ![ $# = 9 ]; then
 			usage
 			exit 1
 		
@@ -201,21 +208,22 @@ if [ $# > 0 ]; then
 fi
 
 function installHostname(){
-	sudo -s
-	echo $1 > "/etc/hostname"
-	/etc/init.d/hostname.sh start
-	exit
+	sudo echo $1 > "/etc/hostname"
+	sudo /etc/init.d/hostname.sh start
 }
 
 read -p "What hostname/ID should be given to this unit? This must be unique!" host
+read -p "What is the correct IP address/URL of the server?" serv
+cd ~
 addUser
 installIP
-installDependencies
-cd ~
-getFromGit
+#installDependencies
+#getFromGit
 installHostname $host
 addToSudoers
 chmodFiles
-setCron $cron
+setServer $serv
+setCron
+su isis
 
 # SCRIPT END
