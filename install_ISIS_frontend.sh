@@ -40,6 +40,7 @@ function installDependencies {
 	installPackage python-mysqldb
 	installPackage python-git
 	installPackage libssl-dev
+	installPackage iw
 	#installPackage aircrack-ng	TODO: download and compile aircrack
 }
 
