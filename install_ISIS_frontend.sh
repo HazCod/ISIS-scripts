@@ -215,6 +215,17 @@ function installHostname(){
 	sudo /etc/init.d/hostname.sh start
 }
 
+function installAircrack(){
+	wget http://download.aircrack-ng.org/aircrack-ng-1.2-beta2.tar.gz
+	tar -xzvf aircrack-ng-1.2-beta2.tar.gz
+	cd aircrack-ng-1.2-beta2
+	make
+	sudo make install
+	sudo airodump-ng-oui-update
+	cd ..
+	rm aircrack-ng-1.2-beta2.tar.gz
+}
+
 read -p "What hostname/ID should be given to this unit? This must be unique!" host
 read -p "What is the correct IP address/URL of the server?" serv
 cd ~
@@ -229,5 +240,6 @@ setServer $dir
 setCron
 su isis
 cd ~
+installAircrack
 
 # SCRIPT END
