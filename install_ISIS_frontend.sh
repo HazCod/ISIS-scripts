@@ -238,8 +238,7 @@ addToSudoers
 chmodFiles
 setServer $dir
 setCron
-su isis
 cd ~
 installAircrack
-
+su isis
 # SCRIPT END
