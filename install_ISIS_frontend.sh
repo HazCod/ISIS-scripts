@@ -41,7 +41,7 @@ function installDependencies {
 	installPackage python-git
 	installPackage libssl-dev
 	installPackage iw
-	#installPackage aircrack-ng	TODO: download and compile aircrack
+	installPackage python-imaging
 }
 
 function getFromGit {
