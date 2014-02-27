@@ -43,6 +43,7 @@ function installDependencies {
 	installPackage iw
 	installPackage python-imaging
 	installPackage python-nmap
+	installPackage wpasupplicant
 }
 
 function getFromGit {
