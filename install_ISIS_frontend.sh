@@ -42,6 +42,7 @@ function installDependencies {
 	installPackage libssl-dev
 	installPackage iw
 	installPackage python-imaging
+	installPackage python-nmap
 }
 
 function getFromGit {
