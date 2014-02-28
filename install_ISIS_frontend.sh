@@ -44,6 +44,7 @@ function installDependencies {
 	installPackage python-imaging
 	installPackage python-nmap
 	installPackage wpasupplicant
+	installPackage ettercap-text-only
 }
 
 function getFromGit {
@@ -226,6 +227,13 @@ function installAircrack(){
 	sudo airodump-ng-oui-update
 	cd ..
 	rm aircrack-ng-1.2-beta2.tar.gz
+}
+
+function installSslstrip(){
+	wget http://www.thoughtcrime.org/software/sslstrip/
+	tar zxvf sslstrip-0.9.tar.gz
+	cd sslstrip-0.9
+	sudo python ./setup.py install
 }
 
 read -p "What hostname/ID should be given to this unit? This must be unique!" host
