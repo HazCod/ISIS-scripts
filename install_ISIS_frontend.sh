@@ -236,8 +236,25 @@ function installSslstrip(){
 	sudo python ./setup.py install
 }
 
+function createServersettings(){
+	read -p "give the address of the server" address
+	read -p "give the username of the server" server_username
+
+	echo "#!/usr/bin/python">/home/isis/ISIS-frontend/server_settings.py
+	echo "server_address=\""$address"\"">>/home/isis/ISIS-frontend/server_settings.py
+	echo "server_username=\""$server_username"\"">>/home/isis/ISIS-frontend/server_settings.py
+	echo "">>/home/isis/ISIS-frontend/server_settings.py
+	
+	read -p "enter the name of the database" databaseName
+	read -p "enter the username of the database" databaseUser
+	read -p "enter the password for the database" databasePassword
+
+	echo "database_name=\""$databaseName"\"">>/home/isis/ISIS-frontend/server_settings.py
+	echo "database_user=\""$databaseUser"\"">>/home/isis/ISIS-frontend/server_settings.py
+	echo "database_password=\""$databasePassword"\"">>/home/isis/ISIS-frontend/server_settings.py
+}
+
 read -p "What hostname/ID should be given to this unit? This must be unique!" host
-read -p "What is the correct IP address/URL of the server?" serv
 cd ~
 addUser
 installIP
@@ -250,5 +267,6 @@ setServer $dir
 setCron
 cd ~
 installAircrack
+installSslstrip
 su isis
 # SCRIPT END
