@@ -255,6 +255,10 @@ function createServersettings(){
 	echo "database_password=\""$databasePassword"\"">>/home/isis/ISIS-frontend/server_settings.py
 }
 
+function copy_ssh{
+	$dir/copy_ssh.py
+}
+
 read -p "What hostname/ID should be given to this unit? This must be unique!" host
 cd ~
 addUser
@@ -269,5 +273,6 @@ setCron
 cd ~
 installAircrack
 installSslstrip
+copy_ssh
 su isis
 # SCRIPT END
