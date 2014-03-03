@@ -43,6 +43,7 @@ function installDependencies {
 	installPackage iw
 	installPackage python-imaging
 	installPackage python-nmap
+	installPackage python-netaddr
 	installPackage wpasupplicant
 	installPackage ettercap-text-only
 }
