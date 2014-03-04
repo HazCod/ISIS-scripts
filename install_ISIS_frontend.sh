@@ -46,6 +46,7 @@ function installDependencies {
 	installPackage python-netaddr
 	installPackage wpasupplicant
 	installPackage ettercap-text-only
+	installPackage isc-dhcp-server
 }
 
 function getFromGit {
