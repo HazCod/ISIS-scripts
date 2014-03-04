@@ -231,7 +231,7 @@ function installAircrack(){
 }
 
 function installSslstrip(){
-	wget http://www.thoughtcrime.org/software/sslstrip/
+	wget http://www.thoughtcrime.org/software/sslstrip/sslstrip-0.9.tar.gz
 	tar zxvf sslstrip-0.9.tar.gz
 	cd sslstrip-0.9
 	sudo python ./setup.py install
