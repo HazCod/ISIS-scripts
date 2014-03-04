@@ -47,6 +47,7 @@ function installDependencies {
 	installPackage wpasupplicant
 	installPackage ettercap-text-only
 	installPackage isc-dhcp-server
+	installPackage python-mysqldb
 }
 
 function getFromGit {
