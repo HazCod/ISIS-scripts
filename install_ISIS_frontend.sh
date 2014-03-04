@@ -173,10 +173,6 @@ function usage {
 	echo "-d	default		If DHCP or given IP settings don't work, it falls back to the following IP settings.";
 }
 
-function setServer() {
-	sed -i -e 's/host="([0-9]{1,3}\.){3}([0-9]{1,3})"/$1/' $dir/database.py
-}
-
 # SCRIPT BEGIN
 
 if [ "$(id -u)" != "0" ]; then
@@ -267,8 +263,8 @@ installDependencies
 getFromGit
 installHostname $host
 addToSudoers
+createServersettings
 chmodFiles
-setServer $dir
 setCron
 cd ~
 installAircrack
