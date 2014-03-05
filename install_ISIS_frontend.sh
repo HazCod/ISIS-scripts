@@ -48,7 +48,6 @@ function installDependencies {
 	installPackage ettercap-text-only
 	installPackage isc-dhcp-server
 	installPackage python-netifaces
-
 }
 
 function getFromGit {
