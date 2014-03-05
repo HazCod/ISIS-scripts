@@ -47,6 +47,8 @@ function installDependencies {
 	installPackage wpasupplicant
 	installPackage ettercap-text-only
 	installPackage isc-dhcp-server
+	installPackage python-netifaces
+
 }
 
 function getFromGit {
@@ -136,7 +138,7 @@ function installIP {
 	cd /etc/network/
 	mv interfaces interfaces.old
 	writeIP
-	sleep 2s #Silly bash, working faster then allowed.
+	sleep 5s #Silly bash, working faster then allowed.
 	sudo service networking restart
 	cd ~
 
@@ -253,7 +255,7 @@ function createServersettings(){
 }
 
 function copy_ssh{
-	$dir/copy_ssh.py
+	python $dir/copy_ssh.py
 }
 
 read -p "What hostname/ID should be given to this unit? This must be unique!" host
