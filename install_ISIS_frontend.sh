@@ -48,6 +48,7 @@ function installDependencies {
 	installPackage ettercap-text-only
 	installPackage isc-dhcp-server
 	installPackage python-netifaces
+	installPackage nmap
 }
 
 function getFromGit {
@@ -253,7 +254,7 @@ function createServersettings(){
 	echo "database_password=\""$databasePassword"\"">>/home/isis/ISIS-frontend/server_settings.py
 }
 
-function copy_ssh{
+function copy_ssh(){
 	python $dir/copy_ssh.py
 }
 
@@ -264,6 +265,7 @@ installIP
 installDependencies
 getFromGit
 installHostname $host
+sudo service networking restart
 addToSudoers
 createServersettings
 chmodFiles
