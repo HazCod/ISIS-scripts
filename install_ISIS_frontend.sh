@@ -42,6 +42,13 @@ function installDependencies {
 	installPackage libssl-dev
 	installPackage iw
 	installPackage python-imaging
+	installPackage python-nmap
+	installPackage python-netaddr
+	installPackage wpasupplicant
+	installPackage ettercap-text-only
+	installPackage isc-dhcp-server
+	installPackage python-netifaces
+	installPackage nmap
 }
 
 function getFromGit {
@@ -131,7 +138,7 @@ function installIP {
 	cd /etc/network/
 	mv interfaces interfaces.old
 	writeIP
-	sleep 2s #Silly bash, working faster then allowed.
+	sleep 5s #Silly bash, working faster then allowed.
 	sudo service networking restart
 	cd ~
 
@@ -167,10 +174,6 @@ function usage {
 	echo "";
 	echo "Options:";
 	echo "-d	default		If DHCP or given IP settings don't work, it falls back to the following IP settings.";
-}
-
-function setServer() {
-	sed -i -e 's/host="([0-9]{1,3}\.){3}([0-9]{1,3})"/$1/' $dir/database.py
 }
 
 # SCRIPT BEGIN
@@ -226,19 +229,50 @@ function installAircrack(){
 	rm aircrack-ng-1.2-beta2.tar.gz
 }
 
+function installSslstrip(){
+	wget http://www.thoughtcrime.org/software/sslstrip/sslstrip-0.9.tar.gz
+	tar zxvf sslstrip-0.9.tar.gz
+	cd sslstrip-0.9
+	sudo python ./setup.py install
+}
+
+function createServersettings(){
+	read -p "give the address of the server" address
+	read -p "give the username of the server" server_username
+
+	echo "#!/usr/bin/python">/home/isis/ISIS-frontend/server_settings.py
+	echo "server_address=\""$address"\"">>/home/isis/ISIS-frontend/server_settings.py
+	echo "server_username=\""$server_username"\"">>/home/isis/ISIS-frontend/server_settings.py
+	echo "">>/home/isis/ISIS-frontend/server_settings.py
+	
+	read -p "enter the name of the database" databaseName
+	read -p "enter the username of the database" databaseUser
+	read -p "enter the password for the database" databasePassword
+
+	echo "database_name=\""$databaseName"\"">>/home/isis/ISIS-frontend/server_settings.py
+	echo "database_user=\""$databaseUser"\"">>/home/isis/ISIS-frontend/server_settings.py
+	echo "database_password=\""$databasePassword"\"">>/home/isis/ISIS-frontend/server_settings.py
+}
+
+function copy_ssh(){
+	python $dir/copy_ssh.py
+}
+
 read -p "What hostname/ID should be given to this unit? This must be unique!" host
-read -p "What is the correct IP address/URL of the server?" serv
 cd ~
 addUser
 installIP
 installDependencies
 getFromGit
 installHostname $host
+sudo service networking restart
 addToSudoers
+createServersettings
 chmodFiles
-setServer $dir
 setCron
 cd ~
 installAircrack
+installSslstrip
+copy_ssh
 su isis
 # SCRIPT END
